@@ -1,5 +1,6 @@
 @use "variables" as variable;
 @use "mixins" as mixin;
+@use "components/card";
 
 * {
     box-sizing : border-box;

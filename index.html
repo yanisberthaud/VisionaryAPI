@@ -11,6 +11,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <title> Visionary </title>
   </head>
+
+  <script type="module" src="/src/main.ts"></script>
+
   <body>
     <header class="navbar">
       <div class="navbar-container">
@@ -37,124 +40,44 @@
       </div>
     </header>
 
-    <main> 
+    <main>
+      <!-- Statistiques -->
+      <div id="stats-container" class="stats-container"></div>
+
+      <!-- Contrôles -->
+      <div class="controls">
+        <input 
+          type="search" 
+          id="search-input" 
+          class="search-input" 
+          placeholder="Rechercher un film..."
+        />
+        <select id="sort-select" class="sort-select">
+          <option value="vote_average-desc">Mieux notés</option>
+          <option value="vote_average-asc">Moins bien notés</option>
+          <option value="title-asc">Titre (A → Z)</option>
+          <option value="title-desc">Titre (Z → A)</option>
+          <option value="release_date-desc">Plus récents</option>
+          <option value="release_date-asc">Plus anciens</option>
+        </select>
+        <label class="favorites-toggle">
+          <input type="checkbox" id="favorites-toggle" />
+          <span>⭐ Favoris uniquement</span>
+        </label>
+      </div>
+
+      <!-- Grille de films -->
       <section>
-        <div class="bouton-nav-mobile">
-            <a href="pages/films/films">
-              <button class="bouton bouton-films">
-                Films
-              </button>
-            </a>
-            <a href="pages/series/series">
-              <button class="bouton">
-                Séries
-              </button>
-            </a>
-        </div>
-        <div class="couverture">
-          <div class="affiche">
-            <div class="affiche-mobile">
-              <img class="affiche-film" src="series/accueil/cover_narcos.png" alt="Narcos">
-            </div>
-            <p class="film-title"> F1 - The Movie </p>
-            <p class="film-description"> Plongez au cœur de l’adrénaline de la Formule 1 avec F1 The Movie. Quand un ancien prodige blessé 
-              revient sur le circuit, il doit guider un jeune talent et sauver son équipe de la faillite. Vitesse, rivalités, et 
-              dépassement de soi : chaque virage compte dans cette course pour la rédemption. </p>
-          </div>
-          <div class="equilibrage">
-            <div class="actions">
-              <a href="https://www.youtube.com/watch?v=OM9-gNn4LWc&t=5s">
-                <button class="btn bouton-play">
-                  <i class="fas fa-play"></i> Lecture
-                </button>
-              </a>
-              <a href="pages/films/details/accueil/f1_the_movie">
-                <button class="btn bouton-information">
-                  <i class="fas fa-circle-info"></i> Plus d'infos
-                </button>
-              </a>
-            </div>
-            <div class="rating">
-              <i class="fas fa-star full"></i>
-              <i class="fas fa-star full"></i>
-              <i class="fas fa-star full"></i>
-              <i class="fas fa-star full"></i>
-              <div class="empty">
-                <i class="fas fa-star" ></i>
-              </div>
-            </div>
-          </div>
-        </div>
+        <h2>Films populaires</h2>
+        <div id="movies-grid" class="defilement"></div>
       </section>
 
-      <section class="grid">
-        <div class="box-1"> <a href="pages/series/details/accueil/drive_to_survive"><img class="cover" src="/series/accueil/cover_drive_to_survive.png" alt="Drive To Survive"></a></div>
-        <div class="box-2"> <a href="pages/films/details/accueil/interstellar"><img class="cover" src="/films/accueil/cover_interstellar.jpg" alt="Interstallar"></a></div>
-        <div class="box-2"> <a href="pages/films/details/accueil/the_dark_knight"><img class="cover" src="/films/accueil/cover_the_dark_knight.jpg" alt="Batman - The Dark Knight"></a></div>
-        <div class="box-2"> <a href="pages/series/details/accueil/narcos"><img class="cover" src="/series/accueil/cover_narcos.png" alt="Narcos"></a></div>
-        <div class="box-2"> <a href="pages/films/details/accueil/the_truman_show"><img class="cover" src="/films/accueil/cover_the_truman_show.jpg" alt="The Truman Show"></a></div>
-        <div class="box-2"> <a href="pages/series/details/accueil/get_gotti"><img class="cover" src="/series/accueil/cover_get_gotti.jpg" alt="Get Gotti"></a></div>
-        <div class="box-2"> <a href="pages/films/details/accueil/blade_runner_2049"><img class="cover" src="/films/accueil/cover_blade_runner_2049.jpg" alt="Blade Runneur 2049"></a></div>
-      </section>
-
-      <section>
-          <a class="ma-liste" href="pages/ma_liste.html"> 
-            <h2> Ma Liste 
-              <span class="fleche"> <i class="fas fa-chevron-right" style="color : #51e351"></i> </span>
-            </h2>
-          </a>
-
-          <div class="defilement">
-            <div class="box-3"> <a href="pages/films/details/accueil/django"><img class="cover" src="/films/accueil/cover_django.jpg" alt="Django"></a></div>
-            <div class="box-3"> <a href="pages/films/details/accueil/fury"><img class="cover" src="/films/accueil/cover_fury.jpg" alt="Fury"></a></div>
-            <div class="box-3"> <a href="pages/series/details/accueil/breaking_bad"><img class="cover" src="/series/accueil/cover_breaking_bad.jpg" alt="Breaking Bad"></a></div>
-            <div class="box-3"> <a href="pages/films/details/accueil/prisoners"><img class="cover" src="/films/accueil/cover_prisoners.jpg" alt="Prisoners"></a></div>
-            <div class="box-3"> <a href="pages/series/details/accueil/the_wire"><img class="cover" src="/series/accueil/cover_the_wire.jpg" alt="The Wire"></a></div>
-            <div class="box-3"> <a href="pages/films/details/accueil/interstellar"><img class="cover" src="/films/accueil/cover_interstellar.jpg" alt="Interstellar"></a></div>
-            <div class="box-3"> <a href="pages/films/details/accueil/blade_runner_2049"><img class="cover" src="/films/accueil/cover_blade_runner_2049.jpg" alt="Blade Runner 2049"></a></div>
-            <div class="box-3"> <a href="pages/films/details/accueil/goodfellas"><img class="cover" src="/films/accueil/cover_goodfellas.jpg" alt="Goodfellas"></a></div>
-            <div class="box-3"> <a href="pages/films/details/accueil/the_truman_show"><img class="cover" src="/films/accueil/cover_the_truman_show.jpg" alt="The Truman Show"></a></div>
-            <div class="box-3"> <a href="pages/series/details/accueil/drive_to_survive"><img class="cover" src="/series/accueil/cover_drive_to_survive.png" alt="Drive To Survive"></a></div>
-          </div>
-      </section>
-
-      <section>
-          <a class="films" href="pages/films/films.html"> 
-            <h2> Films 
-              <span class="fleche"> <i class="fas fa-chevron-right" style="color : #51e351"></i> </span>
-            </h2>
-          </a>
-
-          <div class="defilement">
-            <div class="box-3"> <a href="pages/films/details/accueil/the_truman_show"><img class="cover" src="/films/accueil/cover_the_truman_show.jpg" alt="The Truman Show"></a></div>
-            <div class="box-3"> <a href="pages/films/details/accueil/the_dark_knight"><img class="cover" src="/films/accueil/cover_the_dark_knight.jpg" alt="Batman - The Dark Knight"></a></div>
-            <div class="box-3"> <a href="pages/films/details/accueil/interstellar"><img class="cover" src="/films/accueil/cover_interstellar.jpg" alt="Interstellar"></a></div>
-            <div class="box-3"> <a href="pages/films/details/accueil/blade_runner_2049"><img class="cover" src="/films/accueil/cover_blade_runner_2049.jpg" alt="Blade Runner 2049"></a></div>
-            <div class="box-3"> <a href="pages/films/details/accueil/django"><img class="cover" src="/films/accueil/cover_django.jpg" alt="Django"></a></div>
-            <div class="box-3"> <a href="pages/films/details/accueil/fury"><img class="cover" src="/films/accueil/cover_fury.jpg" alt="Fury"></a></div>
-            <div class="box-3"> <a href="pages/films/details/accueil/goodfellas"><img class="cover" src="/films/accueil/cover_goodfellas.jpg" alt="Goodfellas"></a></div>
-            <div class="box-3"> <a href="pages/films/details/accueil/prisoners"><img class="cover" src="/films/accueil/cover_prisoners.jpg" alt="Prisoners"></a></div>
-          </div>
-      </section>
-
-      <section>
-          <a class="films" href="pages/series/series.html"> 
-            <h2> Séries
-              <span class="fleche"> <i class="fas fa-chevron-right" style="color : #51e351"></i> </span>
-            </h2>
-          </a>
-
-          <div class="defilement">
-            <div class="box-3"> <a href="pages/series/details/accueil/breaking_bad"><img class="cover" src="/series/accueil/cover_breaking_bad.jpg" alt="Breaking Bad"></a></div>
-            <div class="box-3"> <a href="pages/series/details/accueil/drive_to_survive"><img class="cover" src="/series/accueil/cover_drive_to_survive.png" alt="Drive To Survive"></a></div>
-            <div class="box-3"> <a href="pages/series/details/accueil/get_gotti"><img class="cover" src="/series/accueil/cover_get_gotti.jpg" alt="Get Gotti"></a></div>
-            <div class="box-3"> <a href="pages/series/details/accueil/narcos"><img class="cover" src="/series/accueil/cover_narcos.png" alt="Narcos"></a></div>
-            <div class="box-3"> <a href="pages/series/details/Documentaire/arnold"><img class="cover" src="/series/sport/cover_arnold.jpg" alt="Arnold"></a></div>
-            <div class="box-3"> <a href="pages/series/details/Documentaire/fear_city"><img class="cover" src="/series/Documentaire/cover_fear_city.jpg" alt="Fear City"></a></div>
-            <div class="box-3"> <a href="pages/series/details/thriller/lupin"><img class="cover" src="/series/thriller/cover_lupin.jpg" alt="Lupin"></a></div>
-            <div class="box-3"> <a href="pages/series/details/us/true_detective"><img class="cover" src="/series/us/cover_true_detective.jpg" alt="True Detective"></a></div>
-          </div>
-      </section>
+      <!-- Bouton voir plus -->
+      <div class="load-more">
+        <button id="load-more-btn" class="btn bouton-information">
+          Voir plus
+        </button>
+      </div>
     </main>
   </body>
 </html>
