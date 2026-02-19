@@ -1,6 +1,7 @@
 @use "variables" as variable;
 @use "mixins" as mixin;
 @use "components/card";
+@use "sass:color";
 
 * {
     box-sizing : border-box;
@@ -393,15 +394,11 @@ h1 {
 }
 
 h2 {
-    margin-left : 1.5rem;
+    margin-left : 1rem;
+    margin-bottom : 1rem;
     font-size : 1.3rem;
     transition : transform 0.3s ease-in-out;
     display : inline-block;
-
-    &:hover {
-        transition : transform 0.3s ease-in-out;
-        transform : scale(1.1);
-        }
 }
 
 .fleche {
@@ -428,6 +425,7 @@ h2 {
 }
 
 .carroussel {
+    margin-left : 2rem;
     margin-top : 2rem;
 
     @media(max-width : variable.$mobile) {
@@ -549,7 +547,7 @@ ol {
       transition: color 0.2s;
  
       &:hover {
-        color: darken(variable.$primary-color, 15%);
+        color: color.adjust(variable.$primary-color, $lightness: -15%);
         text-decoration: underline;
       }
 

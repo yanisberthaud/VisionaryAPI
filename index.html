@@ -41,43 +41,60 @@
     </header>
 
     <main>
-      <!-- Statistiques -->
-      <div id="stats-container" class="stats-container"></div>
+  <!-- Statistiques -->
+  <div id="stats-container" class="stats-container"></div>
 
-      <!-- Contrôles -->
-      <div class="controls">
-        <input 
-          type="search" 
-          id="search-input" 
-          class="search-input" 
-          placeholder="Rechercher un film..."
-        />
-        <select id="sort-select" class="sort-select">
-          <option value="vote_average-desc">Mieux notés</option>
-          <option value="vote_average-asc">Moins bien notés</option>
-          <option value="title-asc">Titre (A → Z)</option>
-          <option value="title-desc">Titre (Z → A)</option>
-          <option value="release_date-desc">Plus récents</option>
-          <option value="release_date-asc">Plus anciens</option>
-        </select>
-        <label class="favorites-toggle">
-          <input type="checkbox" id="favorites-toggle" />
-          <span>⭐ Favoris uniquement</span>
-        </label>
-      </div>
+  <!-- Contrôles -->
+  <div class="controls">
+    <input 
+      type="search" 
+      id="search-input" 
+      class="search-input" 
+      placeholder="Rechercher un film..."
+    />
+    <select id="sort-select" class="sort-select">
+      <option value="vote_average-desc">Mieux notés</option>
+      <option value="vote_average-asc">Moins bien notés</option>
+      <option value="title-asc">Titre (A → Z)</option>
+      <option value="title-desc">Titre (Z → A)</option>
+      <option value="release_date-desc">Plus récents</option>
+      <option value="release_date-asc">Plus anciens</option>
+    </select>
+    <label class="favorites-toggle">
+      <input type="checkbox" id="favorites-toggle" />
+      <span> ⭐ Favoris uniquement</span>
+    </label>
+  </div>
 
-      <!-- Grille de films -->
-      <section>
-        <h2>Films populaires</h2>
-        <div id="movies-grid" class="defilement"></div>
-      </section>
+  <!-- Films populaires -->
+  <section class="carroussel">
+    <h2>Films populaires</h2>
+    <div id="popular-movies" class="defilement"></div>
+  </section>
 
-      <!-- Bouton voir plus -->
-      <div class="load-more">
-        <button id="load-more-btn" class="btn bouton-information">
-          Voir plus
-        </button>
-      </div>
-    </main>
+  <!-- Films les mieux notés -->
+  <section class="carroussel">
+    <h2>Les mieux notés</h2>
+    <div id="toprated-movies" class="defilement"></div>
+  </section>
+
+  <!-- Films en ce moment -->
+  <section class="carroussel">
+    <h2>En ce moment au cinéma</h2>
+    <div id="nowplaying-movies" class="defilement"></div>
+  </section>
+
+  <!-- Séries populaires -->
+  <section class="carroussel">
+    <h2>Séries populaires</h2>
+    <div id="popular-series" class="defilement"></div>
+  </section>
+
+  <!-- Séries les mieux notées -->
+  <section class="carroussel">
+    <h2>Séries les mieux notées</h2>
+    <div id="toprated-series" class="defilement"></div>
+  </section>
+</main>
   </body>
 </html>

@@ -36,169 +36,130 @@ class App {
   private stats: Stats | null = null;
 
   async init(): Promise<void> {
-    // Initialiser les stats si l'élément existe
     const statsEl = document.getElementById('stats-container');
     if (statsEl) this.stats = new Stats('stats-container');
 
     this.setupEventListeners();
-    await this.loadMovies();
+
+    await Promise.all([
+      this.loadCarousel('popular-movies', () => ApiService.getPopularMovies(), 'movie'),
+      this.loadCarousel('toprated-movies', () => ApiService.getTopRatedMovies(), 'movie'),
+      this.loadCarousel('nowplaying-movies', () => ApiService.getNowPlayingMovies(), 'movie'),
+      this.loadCarousel('popular-series', () => ApiService.getPopularSeries(), 'tv'),
+      this.loadCarousel('toprated-series', () => ApiService.getTopRatedSeries(), 'tv'),
+    ]);
   }
 
-  // Charger les films
-  private async loadMovies(page: number = 1): Promise<void> {
-    this.state.isLoading = true;
-    this.state.error = null;
-    this.renderSkeletons();
-
-    try {
-      const response = await ApiService.getPopularMovies(page);
-
-      if (page === 1) {
-        this.state.movies = response.results;
-      } else {
-        this.state.movies = [...this.state.movies, ...response.results];
-      }
-
-      this.state.currentPage = page;
-      this.state.totalPages = response.total_pages;
-      this.state.isLoading = false;
-
-      this.render();
-    } catch (error) {
-      this.state.isLoading = false;
-      this.state.error = error instanceof Error
-        ? error.message
-        : 'Une erreur est survenue';
-      this.renderError();
-    }
-  }
-
-  // Rendu principal
-  private render(): void {
-    let items = [...this.state.movies];
-
-    // Filtrer les favoris si nécessaire
-    if (this.state.viewMode === 'favorites') {
-      const favorites = StorageService.getFavorites();
-      items = items.filter(m =>
-        favorites.some(f => f.id === m.id && f.type === 'movie')
-      );
-    }
-
-    // Trier
-    items = Helpers.sortMovies(items, this.state.sortKey, this.state.sortOrder);
-
-    // Afficher
-    this.renderGrid(items);
-
-    // Stats
-    this.stats?.render(items);
-
-    // Bouton voir plus
-    this.updateLoadMoreButton();
-  }
-
-  // Afficher la grille
-  private renderGrid(movies: Movie[]): void {
-    const grid = document.getElementById('movies-grid');
-    if (!grid) return;
-
-    if (movies.length === 0) {
-      grid.innerHTML = `
-        <div class="empty-state">
-          <p>Aucun film trouvé 😕</p>
-        </div>
-      `;
-      return;
-    }
-
-    grid.innerHTML = '';
-    movies.forEach(movie => {
-      const card = MovieCard.create(
-        movie,
-        'movie',
-        () => this.showModal(movie, 'movie'),
-        () => this.toggleFavorite(movie.id, 'movie')
-      );
-      grid.appendChild(card);
-    });
-  }
-
-  // Afficher les skeletons
-  private renderSkeletons(): void {
-    const grid = document.getElementById('movies-grid');
+  private async loadCarousel(
+    gridId: string,
+    fetchFn: () => Promise<{ results: Movie[] | TVShow[] }>,
+    type: MediaType
+  ): Promise<void> {
+    const grid = document.getElementById(gridId);
     if (!grid) return;
 
     grid.innerHTML = '';
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 6; i++) {
       grid.appendChild(MovieCard.createSkeleton());
     }
+
+    try {
+      const response = await fetchFn();
+      const items = response.results;
+
+      if (gridId === 'popular-movies') {
+        this.state.movies = items as Movie[];
+        this.stats?.render(this.state.movies);
+      }
+
+      grid.innerHTML = '';
+      items.forEach(item => {
+        const card = MovieCard.create(
+          item,
+          type,
+          () => this.showModal(item, type),
+          () => this.toggleFavorite(item.id, type)
+        );
+        grid.appendChild(card);
+      });
+
+    } catch {
+      grid.innerHTML = `
+        <div class="error-state">
+          <p>⚠️ Erreur de chargement</p>
+          <button class="btn bouton-play" onclick="location.reload()">
+            Réessayer
+          </button>
+        </div>
+      `;
+    }
   }
 
-  // Afficher une erreur
-  private renderError(): void {
-    const grid = document.getElementById('movies-grid');
-    if (!grid) return;
-
-    grid.innerHTML = `
-      <div class="error-state">
-        <p>⚠️ ${this.state.error}</p>
-        <button class="btn bouton-play" id="retry-btn">
-          Réessayer
-        </button>
-      </div>
-    `;
-
-    document.getElementById('retry-btn')
-      ?.addEventListener('click', () => this.loadMovies());
-  }
-
-  // Ouvrir la modale
   private showModal(item: Movie | TVShow, type: MediaType): void {
     this.modal.show(item, type, () => {
       this.toggleFavorite(item.id, type);
     });
   }
 
-  // Toggle favori
   private toggleFavorite(id: number, type: MediaType): void {
     StorageService.toggleFavorite(id, type);
-    this.render();
+    this.stats?.render(this.state.movies);
   }
 
-  // Mettre à jour le bouton "Voir plus"
-  private updateLoadMoreButton(): void {
-    const btn = document.getElementById('load-more-btn') as HTMLButtonElement;
-    if (!btn) return;
-
-    const hasMore = this.state.currentPage < this.state.totalPages;
-    const isFiltered = this.state.viewMode === 'favorites';
-
-    btn.style.display = hasMore && !isFiltered ? 'block' : 'none';
-  }
-
-  // Event listeners
   private setupEventListeners(): void {
-    // Voir plus
-    document.getElementById('load-more-btn')
-      ?.addEventListener('click', () => {
-        this.loadMovies(this.state.currentPage + 1);
-      });
-
     // Tri
     const sortSelect = document.getElementById('sort-select') as HTMLSelectElement;
     sortSelect?.addEventListener('change', () => {
       const [key, order] = sortSelect.value.split('-') as [SortKey, SortOrder];
       this.state.sortKey = key;
       this.state.sortOrder = order;
-      this.render();
+
+      const grid = document.getElementById('popular-movies');
+      if (!grid) return;
+
+      const sorted = Helpers.sortMovies(
+        this.state.movies,
+        this.state.sortKey,
+        this.state.sortOrder
+      );
+
+      grid.innerHTML = '';
+      sorted.forEach(movie => {
+        const card = MovieCard.create(
+          movie,
+          'movie',
+          () => this.showModal(movie, 'movie'),
+          () => this.toggleFavorite(movie.id, 'movie')
+        );
+        grid.appendChild(card);
+      });
     });
 
     // Toggle favoris
     const favToggle = document.getElementById('favorites-toggle') as HTMLInputElement;
     favToggle?.addEventListener('change', () => {
       this.state.viewMode = favToggle.checked ? 'favorites' : 'all';
-      this.render();
+      const grid = document.getElementById('popular-movies');
+      if (!grid) return;
+
+      let items = [...this.state.movies];
+      if (this.state.viewMode === 'favorites') {
+        const favorites = StorageService.getFavorites();
+        items = items.filter(m =>
+          favorites.some(f => f.id === m.id && f.type === 'movie')
+        );
+      }
+
+      grid.innerHTML = '';
+      items.forEach(movie => {
+        const card = MovieCard.create(
+          movie,
+          'movie',
+          () => this.showModal(movie, 'movie'),
+          () => this.toggleFavorite(movie.id, 'movie')
+        );
+        grid.appendChild(card);
+      });
     });
 
     // Recherche
@@ -214,25 +175,58 @@ class App {
     }
   }
 
-  // Recherche
   private async handleSearch(query: string): Promise<void> {
     if (!query.trim()) {
-      await this.loadMovies(1);
+      await this.loadCarousel(
+        'popular-movies',
+        () => ApiService.getPopularMovies(),
+        'movie'
+      );
       return;
     }
 
-    this.renderSkeletons();
+    const grid = document.getElementById('popular-movies');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+    for (let i = 0; i < 6; i++) {
+      grid.appendChild(MovieCard.createSkeleton());
+    }
+
     try {
       const response = await ApiService.search(query);
       this.state.movies = response.results;
-      this.state.totalPages = 1;
-      this.render();
+      grid.innerHTML = '';
+
+      if (response.results.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <p>Aucun film trouvé pour "${query}" 😕</p>
+          </div>
+        `;
+        return;
+      }
+
+      response.results.forEach(movie => {
+        const card = MovieCard.create(
+          movie,
+          'movie',
+          () => this.showModal(movie, 'movie'),
+          () => this.toggleFavorite(movie.id, 'movie')
+        );
+        grid.appendChild(card);
+      });
+
+      this.stats?.render(this.state.movies);
     } catch {
-      this.renderError();
+      grid.innerHTML = `
+        <div class="error-state">
+          <p>⚠️ Erreur lors de la recherche</p>
+        </div>
+      `;
     }
   }
 }
 
-// Lancer l'app
 const app = new App();
 app.init().catch(console.error);

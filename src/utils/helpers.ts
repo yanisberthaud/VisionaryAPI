@@ -58,14 +58,11 @@ export class Helpers {
   }
 
   // Debounce pour la recherche
-  static debounce<T extends (...args: unknown[]) => void>(
-    func: T,
-    wait: number
-  ): (...args: Parameters<T>) => void {
+  static debounce(func: (value: string) => void, wait: number): (value: string) => void {
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
-    return function (...args: Parameters<T>) {
+    return function (value: string) {
       if (timeoutId) clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => func(...args), wait);
+      timeoutId = setTimeout(() => func(value), wait);
     };
   }
 }

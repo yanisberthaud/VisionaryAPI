@@ -59,4 +59,31 @@ export class ApiService {
     if (!response.ok) throw new Error('Erreur lors de la recherche');
     return response.json() as Promise<ApiResponse<Movie>>;
   }
+  // Films les mieux notés
+  static async getTopRatedMovies(): Promise<ApiResponse<Movie>> {
+    const response = await fetch(
+      `${BASE_URL}/movie/top_rated?api_key=${API_KEY}&language=fr-FR`
+    );
+    if (!response.ok) throw new Error('Erreur chargement');
+    return response.json() as Promise<ApiResponse<Movie>>;
+  }
+
+  // Films en ce moment
+  static async getNowPlayingMovies(): Promise<ApiResponse<Movie>> {
+    const response = await fetch(
+      `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=fr-FR`
+    );
+    if (!response.ok) throw new Error('Erreur chargement');
+    return response.json() as Promise<ApiResponse<Movie>>;
+  }
+
+  // Séries les mieux notées
+  static async getTopRatedSeries(): Promise<ApiResponse<TVShow>> {
+    const response = await fetch(
+      `${BASE_URL}/tv/top_rated?api_key=${API_KEY}&language=fr-FR`
+    );
+    if (!response.ok) throw new Error('Erreur chargement');
+    return response.json() as Promise<ApiResponse<TVShow>>;
+  }
 }
+
